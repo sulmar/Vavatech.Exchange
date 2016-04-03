@@ -1,0 +1,80 @@
+﻿<Page
+    x:Class="Vavatech.Exchange.UWPClient.Views.ExchangeTablesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Vavatech.Exchange.UWPClient.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Vavatech.Exchange.UWPClient.ViewModels"
+    xmlns:model="using:Vavatech.Exchange.Models"
+    xmlns:converterts="using:Vavatech.Exchange.UWPClient.Converters"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded"
+    >
+
+    <Page.Resources>
+
+        <converterts:DateFormatConverter x:Key="DateFormatConverter" />
+
+        <DataTemplate x:Key="ExchangeTableTemplate" 
+                      x:DataType="model:ExchangeTable" >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding ExchangeDate, 
+                    Converter={StaticResource DateFormatConverter}}" 
+                           Margin="5" />
+                <TextBlock Text="{Binding Number}" Margin="5" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ExchangeRateTemplate"
+                      x:DataType="model:ExchangeRate">
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding CurrencySymbol}" Margin="5" />
+                <TextBlock Text="{Binding Ratio}" Margin="5" />
+                <TextBlock Text="{Binding CurrencyRate}" Margin="5" />
+
+            </StackPanel>
+        </DataTemplate>
+                  
+    </Page.Resources>
+
+    <Page.DataContext>
+        <vm:ExchangeTablesViewModel />
+    </Page.DataContext>
+    
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="70*" />
+            </Grid.ColumnDefinitions>
+
+
+            <StackPanel x:Name="ExchangeTablesPanel">
+
+                <Button Command="{Binding BuyCommand}">Buy</Button>
+                <ListBox
+                    ItemsSource="{Binding ExchangeTables}"
+                    SelectedItem="{Binding SelectedExchangeTable, Mode=TwoWay}"
+                    ItemTemplate="{StaticResource ExchangeTableTemplate}"
+                    />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" x:Name="Content">
+                <ListBox 
+                    ItemsSource="{Binding SelectedExchangeTable.ExchangeRates}"
+                    ItemTemplate="{StaticResource ExchangeRateTemplate}"
+                    />
+            
+              
+            </StackPanel>
+          
+          
+            
+        </Grid>
+        
+    </Grid>
+</Page>
